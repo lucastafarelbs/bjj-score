@@ -1,0 +1,133 @@
+.left-panel {
+  background: white;
+  height: 100vh;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.right-panel {
+  background: var(--light-gray);
+  flex-grow: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.right-panel>.upper-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-panel>.upper-container>.form-new-fight {
+  width: 60%;
+  background: var(--wolf-gray);
+  color: white;
+  text-align: center;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.config-title {
+  font-size: 1.4em;
+  font-weight: 500;
+}
+
+.right-panel>.upper-container>.form-new-fight>form {
+  text-align: left;
+  font-size: 1.2em;
+  font-weight: 500;
+  width: 100%;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel>.upper-container>.form-new-fight>form>button {
+  margin-top: 50px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 25px;
+  cursor: pointer;
+  background: var(--light-gray);
+  color: black;
+  font-weight: 500;
+}
+
+.fighter {
+  padding: 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  color: white;
+}
+
+.blue {
+  background: var(--fighter-blue);
+}
+
+.red {
+  background: var(--fighter-red);
+}
+
+
+button:hover {
+  opacity: .85;
+}
+
+label {
+  margin-top: 20px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.apoio-footer {
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.apoio-footer>.text-h3 {
+  font-size: 1.5em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--wolf-gray);
+}
+
+.apoio-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.apoio-item {
+  background: var(--blue);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.apoio-item>img {
+  width: 220px;
+  box-sizing: border-box;
+}

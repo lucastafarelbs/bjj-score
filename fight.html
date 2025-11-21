@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Luta</title>
+    <link rel="stylesheet" href="styles-fight.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="top">
+        <div class="timer">
+          <div id="timer">00:00</div>
+        </div>
+        <div class="controls">
+          <button id="start-btn">Começar</button>
+          <button id="restart-btn" style="display: none">Reiniciar</button>
+          <button id="finish-btn" style="display: none">Finalizar</button>
+        </div>
+      </div>
+      <!-- Fighter 1 -->
+      <div class="fighter bg-blue">
+        <div class="col">
+          <div class="name" id="name1"></div>
+          <div class="row">
+            <div class="control-box">
+              <div class="moves">
+                <span>Montada</span>
+                <span>Pegada nas Costas</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>4</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Passagem de Guarda</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>3</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Queda</span>
+                <span>Raspagem</span>
+                <span>Joelho na Barriga</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>2</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Vantagem</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Punição</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="score txt-blue">
+          <span>0</span>
+        </div>
+      </div>
+
+      <!-- fighter 2-->
+      <div class="fighter bg-red">
+        <div class="col">
+          <div class="name" id="name2"></div>
+          <div class="row">
+            <div class="control-box">
+              <div class="moves">
+                <span>Montada</span>
+                <span>Pegada nas Costas</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>4</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Passagem de Guarda</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>3</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Queda</span>
+                <span>Raspagem</span>
+                <span>Joelho na Barriga</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>2</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Vantagem</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+              </span>
+            </div>
+
+            <div class="control-box">
+              <div class="moves">
+                <span>Punição</span>
+              </div>
+              <span class="move-points">0</span>
+              <span class="add-remove">
+                <button>-</button>
+                <span>1</span>
+                <button>+</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="score txt-red">
+          <span>0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPUP -->
+    <div id="popup">
+      <div id="popup-content">
+        <h1 id="winner-name"></h1>
+        <button class="popup-button" onclick="goBack()">Encerrar</button>
+      </div>
+    </div>
+
+    <script>
+      /* CONFIG */
+      const cfg = JSON.parse(localStorage.getItem("fightConfig") || "{}");
+
+      document.getElementById("name1").textContent = cfg.lut1;
+      document.getElementById("name2").textContent = cfg.lut2;
+
+      let score1 = 0;
+      let score2 = 0;
+
+      let remaining = cfg.tempo;
+      let timerInterval = null;
+
+      const timerEl = document.getElementById("timer");
+      const finishBtn = document.getElementById("finish-btn");
+
+      function format(t) {
+        const m = String(Math.floor(t / 60)).padStart(2, "0");
+        const s = String(t % 60).padStart(2, "0");
+        return `${m}:${s}`;
+      }
+
+      timerEl.textContent = format(remaining);
+
+      /* ===================================================================
+   PEGAR TODOS OS BOTÕES - ELES AGORA ESTÃO EM ".control-box .add-remove button"
+=================================================================== */
+      const controlBoxes = document.querySelectorAll(".fighter");
+
+      /* desativar antes do start */
+      controlBoxes.forEach((box) => {
+        box.classList.add("disabled-controls");
+        box.querySelectorAll("button").forEach((btn) => (btn.disabled = true));
+      });
+
+      /* ===================================================================
+   START
+=================================================================== */
+      document.getElementById("start-btn").onclick = () => {
+        if (timerInterval) return;
+
+        finishBtn.style.display = "inline-block";
+        document.getElementById("restart-btn").style.display = "inline-block";
+
+        /* habilitar controles */
+        controlBoxes.forEach((box) => {
+          box.classList.remove("disabled-controls");
+          box
+            .querySelectorAll("button")
+            .forEach((btn) => (btn.disabled = false));
+        });
+
+        timerInterval = setInterval(() => {
+          remaining--;
+          timerEl.textContent = format(remaining);
+          if (remaining <= 0) {
+            clearInterval(timerInterval);
+            finishFight();
+          }
+        }, 1000);
+
+        document.getElementById("start-btn").style.display = "none";
+      };
+
+      /* ===================================================================
+   RESTART
+=================================================================== */
+      document.getElementById("restart-btn").onclick = () => {
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        remaining = cfg.tempo;
+        score1 = 0;
+        score2 = 0;
+
+        document.querySelectorAll(".fighter .score span")[0].textContent = 0;
+        document.querySelectorAll(".fighter .score span")[1].textContent = 0;
+
+        document
+          .querySelectorAll(".move-points")
+          .forEach((mp) => (mp.textContent = 0));
+
+        timerEl.textContent = format(remaining);
+
+        finishBtn.style.display = "none";
+        document.getElementById("start-btn").style.display = "inline-block";
+        document.getElementById("restart-btn").style.display = "none";
+
+        controlBoxes.forEach((box) => {
+          box
+            .querySelectorAll("button")
+            .forEach((btn) => (btn.disabled = true));
+        });
+      };
+
+      /* ===================================================================
+   SISTEMA DE PONTOS DE ACORDO COM SEU NOVO LAYOUT
+=================================================================== */
+
+      document.querySelectorAll(".control-box").forEach((box, idx) => {
+        const movePointsEl = box.querySelector(".move-points");
+        const value = parseInt(
+          box.querySelector(".add-remove span").textContent,
+        );
+
+        // Determinar a qual lutador pertence (1 = azul, 2 = vermelho)
+        const fighterDiv = box.closest(".fighter");
+        const isFighter1 = fighterDiv.classList.contains("bg-blue");
+
+        const scoreEl = isFighter1
+          ? document.querySelector(".bg-blue .score span")
+          : document.querySelector(".bg-red .score span");
+
+        let movePoints = 0;
+
+        const minusBtn = box.querySelector(".add-remove button:first-child");
+        const plusBtn = box.querySelector(".add-remove button:last-child");
+
+        minusBtn.onclick = () => {
+          if (minusBtn.disabled) return;
+
+          if (value === 1 && box.innerText.includes("Punição")) {
+            movePoints = Math.max(0, movePoints - 1);
+            if (isFighter1) score1 = Math.max(0, score1 - 1);
+            else score2 = Math.max(0, score2 - 1);
+          } else {
+            movePoints = Math.max(0, movePoints - value);
+            if (isFighter1) score1 = Math.max(0, score1 - value);
+            else score2 = Math.max(0, score2 - value);
+          }
+
+          movePointsEl.textContent = movePoints;
+          scoreEl.textContent = isFighter1 ? score1 : score2;
+        };
+
+        plusBtn.onclick = () => {
+          if (plusBtn.disabled) return;
+
+          if (value === 1 && box.innerText.includes("Punição")) {
+            movePoints += 1;
+            if (isFighter1) score1 += -1;
+            else score2 += -1;
+            if (isFighter1) score1 = Math.max(0, score1);
+            else score2 = Math.max(0, score2);
+          } else {
+            movePoints += value;
+            if (isFighter1) score1 += value;
+            else score2 += value;
+          }
+
+          movePointsEl.textContent = movePoints;
+          scoreEl.textContent = isFighter1 ? score1 : score2;
+        };
+      });
+
+      /* ===================================================================
+   FINISH
+=================================================================== */
+      document.getElementById("finish-btn").onclick = finishFight;
+
+      function finishFight() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+        let winner = "Empate";
+        if (score1 > score2) winner = cfg.lut1;
+        else if (score2 > score1) winner = cfg.lut2;
+
+        saveFight(winner);
+        showPopup(winner);
+      }
+
+      function saveFight(winner) {
+        const fight = {
+          fight: `${cfg.lut1} vs ${cfg.lut2}`,
+          result: winner,
+          fighter1: { name: cfg.lut1, points: score1 },
+          fighter2: { name: cfg.lut2, points: score2 },
+        };
+
+        let arr = [];
+        try {
+          arr = JSON.parse(localStorage.getItem("results")) || [];
+        } catch {}
+
+        arr.push(fight);
+        localStorage.setItem("results", JSON.stringify(arr));
+      }
+
+      /* ===================================================================
+   POPUP
+=================================================================== */
+      function showPopup(winner) {
+        if (winner == "Empate") {
+          document.getElementById("winner-name").textContent = `${winner}`;
+        } else {
+          document.getElementById("winner-name").textContent = `🏆 ${winner}`;
+        }
+        document.getElementById("popup").style.display = "flex";
+      }
+
+      function goBack() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>

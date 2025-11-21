@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nova Luta</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles-index.css" />
+  </head>
+
+  <body>
+    <div class="left-panel">
+      <img src="wolf.png" alt="Logo Lobo" />
+    </div>
+
+    <div class="right-panel">
+      <div class="upper-container">
+        <div class="form-new-fight">
+          <span class="config-title">CONFIGURAR LUTA</span>
+
+          <form id="form">
+            <label class="fighter blue">LUTADOR 1</label>
+            <input id="lut1" required />
+
+            <label class="fighter red">LUTADOR 2</label>
+            <input id="lut2" required />
+
+            <label>TEMPO</label>
+            <select id="tempo">
+              <option value="150" selected>2:30</option>
+              <option value="180">3:00</option>
+              <option value="240">4:00</option>
+              <option value="300">5:00</option>
+              <option value="360">6:00</option>
+              <option value="420">7:00</option>
+              <option value="480">8:00</option>
+              <option value="600">10:00</option>
+            </select>
+
+            <button type="submit">Começar</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="apoio-footer">
+        <span class="text-h3">Apoio</span>
+        <div class="apoio-box">
+          <div class="apoio-item">
+            <img src="prefeitura.png" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        localStorage.setItem(
+          "fightConfig",
+          JSON.stringify({
+            lut1: lut1.value.trim(),
+            lut2: lut2.value.trim(),
+            tempo: parseInt(tempo.value),
+          }),
+        );
+        window.location.href = "fight.html";
+      });
+    </script>
+  </body>
+</html>

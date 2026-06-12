@@ -18,11 +18,18 @@
           <span class="config-title">CONFIGURAR LUTA</span>
 
           <form id="form">
-            <label class="fighter blue">LUTADOR 1</label>
-            <input id="lut1" required />
+            <div class="name-toggle">
+              <input type="checkbox" id="preencher-nomes" />
+              <label for="preencher-nomes">Preencher nomes dos lutadores</label>
+            </div>
 
-            <label class="fighter red">LUTADOR 2</label>
-            <input id="lut2" required />
+            <div id="name-fields" style="display: none">
+              <label class="fighter blue">LUTADOR 1</label>
+              <input id="lut1" />
+
+              <label class="fighter red">LUTADOR 2</label>
+              <input id="lut2" />
+            </div>
 
             <label>TEMPO</label>
             <select id="tempo">
@@ -40,29 +47,29 @@
           </form>
         </div>
       </div>
-
-      <div class="apoio-footer">
-        <span class="text-h3">Apoio</span>
-        <div class="apoio-box">
-          <div class="apoio-item">
-            <img src="prefeitura.png" />
-          </div>
-        </div>
-      </div>
     </div>
 
     <script>
+      document.getElementById("preencher-nomes").addEventListener("change", function () {
+        document.getElementById("name-fields").style.display = this.checked ? "contents" : "none";
+      });
+
       document.getElementById("form").addEventListener("submit", (e) => {
         e.preventDefault();
+        const fillNames = document.getElementById("preencher-nomes").checked;
+        const lut1 = document.getElementById("lut1");
+        const lut2 = document.getElementById("lut2");
         localStorage.setItem(
           "fightConfig",
           JSON.stringify({
-            lut1: lut1.value.trim(),
-            lut2: lut2.value.trim(),
-            tempo: parseInt(tempo.value),
+            lut1: fillNames && lut1.value.trim() ? lut1.value.trim() : "Lutador 1",
+            lut2: fillNames && lut2.value.trim() ? lut2.value.trim() : "Lutador 2",
+            tempo: parseInt(document.getElementById("tempo").value),
           }),
         );
-        window.location.href = "fight.html";
+        document.documentElement.requestFullscreen()
+          .catch(() => {})
+          .finally(() => { window.location.href = "fight.html"; });
       });
     </script>
   </body>

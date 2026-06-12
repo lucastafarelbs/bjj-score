@@ -7,16 +7,28 @@
   </head>
   <body>
     <div class="main">
-      <div class="top">
-        <div class="timer">
-          <div id="timer">00:00</div>
+
+      <!-- HEADER: logo + controls -->
+      <div class="header">
+        <div class="header-left">
+          <img src="wolf.png" class="header-logo" alt="Logo" />
+          <span class="header-title">Copa Wolf de Jiu Jitsu</span>
         </div>
-        <div class="controls">
-          <button id="start-btn">Começar</button>
-          <button id="restart-btn" style="display: none">Reiniciar</button>
-          <button id="finish-btn" style="display: none">Finalizar</button>
+        <div class="header-controls">
+          <button id="start-btn"   class="ctrl-btn btn-green" >▶ Começar</button>
+          <button id="pause-btn"   class="ctrl-btn btn-yellow" style="display: none">⏸ Pausar</button>
+          <button id="restart-btn" class="ctrl-btn btn-red"    style="display: none">↺ Reiniciar</button>
+          <button id="finish-btn"  class="ctrl-btn btn-blue"   style="display: none">⏹ Finalizar</button>
+          <button id="back-btn"    class="ctrl-btn btn-purple">← Voltar</button>
+          <button id="fullscreen-btn" class="ctrl-btn btn-gray">⛶ Tela Cheia</button>
         </div>
       </div>
+
+      <!-- TIMER BAND -->
+      <div class="timer-bar">
+        <div id="timer">00:00</div>
+      </div>
+
       <!-- Fighter 1 -->
       <div class="fighter bg-blue">
         <div class="col">
@@ -61,37 +73,43 @@
               </span>
             </div>
 
-            <div class="control-box">
-              <div class="moves">
-                <span>Vantagem</span>
-              </div>
-              <span class="move-points">0</span>
+            <div class="control-box" data-counter="vant1">
+              <div class="moves"><span>Vantagem</span></div>
+              <span class="move-points" id="vant1-mp">0</span>
               <span class="add-remove">
-                <button>-</button>
+                <button id="vant1-minus">-</button>
                 <span>1</span>
-                <button>+</button>
+                <button id="vant1-plus">+</button>
               </span>
             </div>
 
-            <div class="control-box">
-              <div class="moves">
-                <span>Punição</span>
-              </div>
-              <span class="move-points">0</span>
+            <div class="control-box" data-counter="pun1">
+              <div class="moves"><span>Punição</span></div>
+              <span class="move-points" id="pun1-mp">0</span>
               <span class="add-remove">
-                <button>-</button>
+                <button id="pun1-minus">-</button>
                 <span>1</span>
-                <button>+</button>
+                <button id="pun1-plus">+</button>
               </span>
             </div>
           </div>
         </div>
         <div class="score txt-blue">
-          <span>0</span>
+          <span id="score1-display">0</span>
+          <div class="score-footer">
+            <div class="score-footer-item">
+              <span class="footer-label">Vantagem</span>
+              <span id="vant1-footer" class="footer-count">0</span>
+            </div>
+            <div class="score-footer-item">
+              <span class="footer-label">Punição</span>
+              <span id="pun1-footer" class="footer-count">0</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- fighter 2-->
+      <!-- Fighter 2 -->
       <div class="fighter bg-red">
         <div class="col">
           <div class="name" id="name2"></div>
@@ -135,33 +153,39 @@
               </span>
             </div>
 
-            <div class="control-box">
-              <div class="moves">
-                <span>Vantagem</span>
-              </div>
-              <span class="move-points">0</span>
+            <div class="control-box" data-counter="vant2">
+              <div class="moves"><span>Vantagem</span></div>
+              <span class="move-points" id="vant2-mp">0</span>
               <span class="add-remove">
-                <button>-</button>
+                <button id="vant2-minus">-</button>
                 <span>1</span>
-                <button>+</button>
+                <button id="vant2-plus">+</button>
               </span>
             </div>
 
-            <div class="control-box">
-              <div class="moves">
-                <span>Punição</span>
-              </div>
-              <span class="move-points">0</span>
+            <div class="control-box" data-counter="pun2">
+              <div class="moves"><span>Punição</span></div>
+              <span class="move-points" id="pun2-mp">0</span>
               <span class="add-remove">
-                <button>-</button>
+                <button id="pun2-minus">-</button>
                 <span>1</span>
-                <button>+</button>
+                <button id="pun2-plus">+</button>
               </span>
             </div>
           </div>
         </div>
         <div class="score txt-red">
-          <span>0</span>
+          <span id="score2-display">0</span>
+          <div class="score-footer">
+            <div class="score-footer-item">
+              <span class="footer-label">Vantagem</span>
+              <span id="vant2-footer" class="footer-count">0</span>
+            </div>
+            <div class="score-footer-item">
+              <span class="footer-label">Punição</span>
+              <span id="pun2-footer" class="footer-count">0</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -178,17 +202,24 @@
       /* CONFIG */
       const cfg = JSON.parse(localStorage.getItem("fightConfig") || "{}");
 
-      document.getElementById("name1").textContent = cfg.lut1;
-      document.getElementById("name2").textContent = cfg.lut2;
+      document.getElementById("name1").textContent = cfg.lut1 || "Lutador 1";
+      document.getElementById("name2").textContent = cfg.lut2 || "Lutador 2";
 
-      let score1 = 0;
-      let score2 = 0;
-
-      let remaining = cfg.tempo;
+      let score1 = 0, score2 = 0;
+      let vantagem1 = 0, vantagem2 = 0;
+      let punicao1 = 0, punicao2 = 0;
+      let remaining = cfg.tempo || 150;
       let timerInterval = null;
+      let isPaused = false;
 
-      const timerEl = document.getElementById("timer");
-      const finishBtn = document.getElementById("finish-btn");
+      const timerEl       = document.getElementById("timer");
+      const finishBtn     = document.getElementById("finish-btn");
+      const pauseBtn      = document.getElementById("pause-btn");
+      const score1El      = document.getElementById("score1-display");
+      const score2El      = document.getElementById("score2-display");
+      const fullscreenBtn = document.getElementById("fullscreen-btn");
+
+      function el(id) { return document.getElementById(id); }
 
       function format(t) {
         const m = String(Math.floor(t / 60)).padStart(2, "0");
@@ -198,149 +229,153 @@
 
       timerEl.textContent = format(remaining);
 
-      /* ===================================================================
-   PEGAR TODOS OS BOTÕES - ELES AGORA ESTÃO EM ".control-box .add-remove button"
-=================================================================== */
-      const controlBoxes = document.querySelectorAll(".fighter");
+      /* FULLSCREEN */
+      function updateFullscreenBtn() {
+        fullscreenBtn.textContent = document.fullscreenElement
+          ? "⛶ Sair da Tela Cheia"
+          : "⛶ Tela Cheia";
+      }
+      document.addEventListener("fullscreenchange", updateFullscreenBtn);
+      fullscreenBtn.onclick = () => {
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+        else document.documentElement.requestFullscreen().catch(() => {});
+      };
+      document.documentElement.requestFullscreen().catch(() => {});
 
-      /* desativar antes do start */
-      controlBoxes.forEach((box) => {
-        box.classList.add("disabled-controls");
+      /* BACK */
+      document.getElementById("back-btn").onclick = () => { window.location.href = "index.html"; };
+
+      /* Disable controls before start */
+      const fighterEls = document.querySelectorAll(".fighter");
+      fighterEls.forEach((box) => {
         box.querySelectorAll("button").forEach((btn) => (btn.disabled = true));
       });
 
-      /* ===================================================================
-   START
-=================================================================== */
+      /* START */
       document.getElementById("start-btn").onclick = () => {
         if (timerInterval) return;
-
-        finishBtn.style.display = "inline-block";
-        document.getElementById("restart-btn").style.display = "inline-block";
-
-        /* habilitar controles */
-        controlBoxes.forEach((box) => {
-          box.classList.remove("disabled-controls");
-          box
-            .querySelectorAll("button")
-            .forEach((btn) => (btn.disabled = false));
+        finishBtn.style.display  = "inline-block";
+        pauseBtn.style.display   = "inline-block";
+        el("restart-btn").style.display = "inline-block";
+        el("start-btn").style.display   = "none";
+        fighterEls.forEach((box) => {
+          box.querySelectorAll("button").forEach((btn) => (btn.disabled = false));
         });
-
-        timerInterval = setInterval(() => {
-          remaining--;
-          timerEl.textContent = format(remaining);
-          if (remaining <= 0) {
-            clearInterval(timerInterval);
-            finishFight();
-          }
-        }, 1000);
-
-        document.getElementById("start-btn").style.display = "none";
+        timerInterval = setInterval(tick, 1000);
       };
 
-      /* ===================================================================
-   RESTART
-=================================================================== */
-      document.getElementById("restart-btn").onclick = () => {
+      function tick() {
+        remaining--;
+        timerEl.textContent = format(remaining);
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          finishFight();
+        }
+      }
+
+      /* PAUSE / RESUME */
+      pauseBtn.onclick = () => {
+        if (isPaused) {
+          isPaused = false;
+          pauseBtn.textContent = "⏸ Pausar";
+          timerInterval = setInterval(tick, 1000);
+        } else {
+          isPaused = true;
+          pauseBtn.textContent = "▶ Retomar";
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      };
+
+      /* RESTART */
+      el("restart-btn").onclick = () => {
         clearInterval(timerInterval);
         timerInterval = null;
+        isPaused = false;
+        remaining = cfg.tempo || 150;
+        score1 = 0; score2 = 0;
+        vantagem1 = 0; vantagem2 = 0;
+        punicao1 = 0; punicao2 = 0;
 
-        remaining = cfg.tempo;
-        score1 = 0;
-        score2 = 0;
-
-        document.querySelectorAll(".fighter .score span")[0].textContent = 0;
-        document.querySelectorAll(".fighter .score span")[1].textContent = 0;
-
-        document
-          .querySelectorAll(".move-points")
-          .forEach((mp) => (mp.textContent = 0));
-
+        score1El.textContent = 0;
+        score2El.textContent = 0;
+        ["vant1-mp","vant2-mp","pun1-mp","pun2-mp",
+         "vant1-footer","vant2-footer","pun1-footer","pun2-footer"]
+          .forEach((id) => { el(id).textContent = 0; });
+        document.querySelectorAll(".move-points").forEach((mp) => (mp.textContent = 0));
         timerEl.textContent = format(remaining);
 
         finishBtn.style.display = "none";
-        document.getElementById("start-btn").style.display = "inline-block";
-        document.getElementById("restart-btn").style.display = "none";
+        pauseBtn.style.display  = "none";
+        pauseBtn.textContent    = "⏸ Pausar";
+        el("start-btn").style.display   = "inline-block";
+        el("restart-btn").style.display = "none";
 
-        controlBoxes.forEach((box) => {
-          box
-            .querySelectorAll("button")
-            .forEach((btn) => (btn.disabled = true));
+        fighterEls.forEach((box) => {
+          box.querySelectorAll("button").forEach((btn) => (btn.disabled = true));
         });
       };
 
-      /* ===================================================================
-   SISTEMA DE PONTOS DE ACORDO COM SEU NOVO LAYOUT
-=================================================================== */
-
-      document.querySelectorAll(".control-box").forEach((box, idx) => {
+      /* POINT BOXES (4pt, 3pt, 2pt only — skip data-counter boxes) */
+      document.querySelectorAll(".control-box:not([data-counter])").forEach((box) => {
         const movePointsEl = box.querySelector(".move-points");
-        const value = parseInt(
-          box.querySelector(".add-remove span").textContent,
-        );
-
-        // Determinar a qual lutador pertence (1 = azul, 2 = vermelho)
-        const fighterDiv = box.closest(".fighter");
-        const isFighter1 = fighterDiv.classList.contains("bg-blue");
-
-        const scoreEl = isFighter1
-          ? document.querySelector(".bg-blue .score span")
-          : document.querySelector(".bg-red .score span");
-
+        const value = parseInt(box.querySelector(".add-remove span").textContent);
+        const isFighter1 = box.closest(".fighter").classList.contains("bg-blue");
+        const scoreEl = isFighter1 ? score1El : score2El;
         let movePoints = 0;
 
-        const minusBtn = box.querySelector(".add-remove button:first-child");
-        const plusBtn = box.querySelector(".add-remove button:last-child");
-
-        minusBtn.onclick = () => {
-          if (minusBtn.disabled) return;
-
-          if (value === 1 && box.innerText.includes("Punição")) {
-            movePoints = Math.max(0, movePoints - 1);
-            if (isFighter1) score1 = Math.max(0, score1 - 1);
-            else score2 = Math.max(0, score2 - 1);
-          } else {
-            movePoints = Math.max(0, movePoints - value);
-            if (isFighter1) score1 = Math.max(0, score1 - value);
-            else score2 = Math.max(0, score2 - value);
-          }
-
+        box.querySelector(".add-remove button:first-child").onclick = () => {
+          movePoints = Math.max(0, movePoints - value);
+          if (isFighter1) score1 = Math.max(0, score1 - value);
+          else            score2 = Math.max(0, score2 - value);
           movePointsEl.textContent = movePoints;
           scoreEl.textContent = isFighter1 ? score1 : score2;
         };
-
-        plusBtn.onclick = () => {
-          if (plusBtn.disabled) return;
-
-          if (value === 1 && box.innerText.includes("Punição")) {
-            movePoints += 1;
-            if (isFighter1) score1 += -1;
-            else score2 += -1;
-            if (isFighter1) score1 = Math.max(0, score1);
-            else score2 = Math.max(0, score2);
-          } else {
-            movePoints += value;
-            if (isFighter1) score1 += value;
-            else score2 += value;
-          }
-
+        box.querySelector(".add-remove button:last-child").onclick = () => {
+          movePoints += value;
+          if (isFighter1) score1 += value;
+          else            score2 += value;
           movePointsEl.textContent = movePoints;
           scoreEl.textContent = isFighter1 ? score1 : score2;
         };
       });
 
-      /* ===================================================================
-   FINISH
-=================================================================== */
-      document.getElementById("finish-btn").onclick = finishFight;
+      /* VANTAGEM / PUNIÇÃO (data-counter boxes — do NOT touch main score) */
+      function makeCounter(minusId, plusId, getter, setter, boxEl, footerEl) {
+        el(minusId).onclick = () => {
+          setter(Math.max(0, getter() - 1));
+          boxEl.textContent = getter();
+          footerEl.textContent = getter();
+        };
+        el(plusId).onclick = () => {
+          setter(getter() + 1);
+          boxEl.textContent = getter();
+          footerEl.textContent = getter();
+        };
+      }
+
+      makeCounter("vant1-minus","vant1-plus", () => vantagem1, (v) => { vantagem1=v; }, el("vant1-mp"), el("vant1-footer"));
+      makeCounter("vant2-minus","vant2-plus", () => vantagem2, (v) => { vantagem2=v; }, el("vant2-mp"), el("vant2-footer"));
+      makeCounter("pun1-minus", "pun1-plus",  () => punicao1,  (v) => { punicao1=v;  }, el("pun1-mp"),  el("pun1-footer"));
+      makeCounter("pun2-minus", "pun2-plus",  () => punicao2,  (v) => { punicao2=v;  }, el("pun2-mp"),  el("pun2-footer"));
+
+      /* FINISH */
+      el("finish-btn").onclick = finishFight;
 
       function finishFight() {
         clearInterval(timerInterval);
         timerInterval = null;
-
+        const n1 = cfg.lut1 || "Lutador 1";
+        const n2 = cfg.lut2 || "Lutador 2";
         let winner = "Empate";
-        if (score1 > score2) winner = cfg.lut1;
-        else if (score2 > score1) winner = cfg.lut2;
+
+        if      (score1 > score2)       winner = n1;
+        else if (score2 > score1)       winner = n2;
+        else if (vantagem1 > vantagem2) winner = n1;
+        else if (vantagem2 > vantagem1) winner = n2;
+        else if (punicao1 < punicao2)   winner = n1;
+        else if (punicao2 < punicao1)   winner = n2;
 
         saveFight(winner);
         showPopup(winner);
@@ -350,34 +385,21 @@
         const fight = {
           fight: `${cfg.lut1} vs ${cfg.lut2}`,
           result: winner,
-          fighter1: { name: cfg.lut1, points: score1 },
-          fighter2: { name: cfg.lut2, points: score2 },
+          fighter1: { name: cfg.lut1||"1", points: score1, vantagens: vantagem1, punicoes: punicao1 },
+          fighter2: { name: cfg.lut2||"2", points: score2, vantagens: vantagem2, punicoes: punicao2 },
         };
-
         let arr = [];
-        try {
-          arr = JSON.parse(localStorage.getItem("results")) || [];
-        } catch {}
-
+        try { arr = JSON.parse(localStorage.getItem("results")) || []; } catch {}
         arr.push(fight);
         localStorage.setItem("results", JSON.stringify(arr));
       }
 
-      /* ===================================================================
-   POPUP
-=================================================================== */
       function showPopup(winner) {
-        if (winner == "Empate") {
-          document.getElementById("winner-name").textContent = `${winner}`;
-        } else {
-          document.getElementById("winner-name").textContent = `🏆 ${winner}`;
-        }
-        document.getElementById("popup").style.display = "flex";
+        el("winner-name").textContent = winner === "Empate" ? "Empate" : `🏆 ${winner}`;
+        el("popup").style.display = "flex";
       }
 
-      function goBack() {
-        window.location.href = "index.html";
-      }
+      function goBack() { window.location.href = "index.html"; }
     </script>
   </body>
 </html>

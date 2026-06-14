@@ -74,8 +74,10 @@
         <!-- HEADER -->
         <div class="header">
           <div class="header-left">
-            <img src="wolf.png" class="header-logo" alt="Logo" />
             <span class="header-title">Copa Wolf de Jiu Jitsu</span>
+          </div>
+          <div class="header-center">
+            <div id="timer">00:00</div>
           </div>
           <div class="header-controls">
             <button id="start-btn"      class="ctrl-btn btn-green">▶ Começar</button>
@@ -83,13 +85,7 @@
             <button id="restart-btn"    class="ctrl-btn btn-red"    style="display:none">↺ Reiniciar</button>
             <button id="finish-btn"     class="ctrl-btn btn-blue"   style="display:none">⏹ Finalizar</button>
             <button id="back-btn"       class="ctrl-btn btn-purple">← Voltar</button>
-            <button id="fullscreen-btn" class="ctrl-btn btn-gray">⛶ Tela Cheia</button>
           </div>
-        </div>
-
-        <!-- TIMER BAND -->
-        <div class="timer-bar">
-          <div id="timer">00:00</div>
         </div>
 
         <!-- Fighter 1 -->
@@ -280,18 +276,6 @@
 
       function goBack() { showConfig(); }
 
-      /* ── FULLSCREEN ── */
-      const fullscreenBtn = el("fullscreen-btn");
-      function updateFullscreenBtn() {
-        fullscreenBtn.textContent = document.fullscreenElement
-          ? "⛶ Sair da Tela Cheia"
-          : "⛶ Tela Cheia";
-      }
-      document.addEventListener("fullscreenchange", updateFullscreenBtn);
-      fullscreenBtn.onclick = () => {
-        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-        else document.documentElement.requestFullscreen().catch(() => {});
-      };
 
       /* ── CONFIG FORM ── */
       el("preencher-nomes").addEventListener("change", function () {

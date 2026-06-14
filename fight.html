@@ -243,7 +243,10 @@
       document.documentElement.requestFullscreen().catch(() => {});
 
       /* BACK */
-      document.getElementById("back-btn").onclick = () => { window.location.href = "index.html"; };
+      document.getElementById("back-btn").onclick = () => {
+        localStorage.setItem("wasFullscreen", document.fullscreenElement ? "1" : "0");
+        window.location.href = "index.html";
+      };
 
       /* Disable controls before start */
       const fighterEls = document.querySelectorAll(".fighter");
@@ -287,6 +290,18 @@
           timerInterval = null;
         }
       };
+
+      /* SPACE: start / pause / resume */
+      document.addEventListener("keydown", (e) => {
+        if (e.code !== "Space") return;
+        e.preventDefault();
+        const startBtn = el("start-btn");
+        if (startBtn.style.display !== "none") {
+          startBtn.click();
+        } else if (pauseBtn.style.display !== "none") {
+          pauseBtn.click();
+        }
+      });
 
       /* RESTART */
       el("restart-btn").onclick = () => {

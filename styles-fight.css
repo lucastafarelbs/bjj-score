@@ -127,7 +127,7 @@ body {
   padding-bottom: 8px;
   width: 100%;
   color: white;
-  font-size: 3em;
+  font-size: 4em;
   text-transform: uppercase;
   font-weight: bold;
   border-bottom: 2px solid rgba(255, 255, 255, 0.3);
@@ -156,7 +156,7 @@ body {
 
 .fighter > .col > .row > .control-box > .moves {
   color: white;
-  font-size: 1.3em;
+  font-size: 1.6em;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -170,7 +170,7 @@ body {
 .fighter > .col > .row > .control-box > .move-points {
   text-align: center;
   color: white;
-  font-size: 3.8em;
+  font-size: 7em;
   font-weight: bold;
   margin: 0;
   padding: 0;
@@ -193,7 +193,7 @@ body {
 }
 
 .fighter > .score > span {
-  font-size: 8em;
+  font-size: 10em;
   line-height: 1;
   font-weight: bold;
   text-align: center;
@@ -217,7 +217,7 @@ body {
 }
 
 .footer-label {
-  font-size: 1.1em;
+  font-size: 1.4em;
   font-weight: bold;
   color: var(--wolf-gray);
   text-transform: uppercase;
@@ -225,7 +225,7 @@ body {
 }
 
 .footer-count {
-  font-size: 3.2em;
+  font-size: 4em;
   font-weight: bold;
   color: var(--bg-dark);
   line-height: 1;
